@@ -1,14 +1,17 @@
 <?php
 
-use App\Doctrine\Entity\Phone;
-use App\Doctrine\Entity\Student;
+use App\Doctrine\Entity\{
+    Phone,Student
+};
 use App\Doctrine\Helper\EntityManagerCreator;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
 $entityManager = EntityManagerCreator::createEntityManager();
-$student = new Student("Aluno com Phones");
-$student->addPhone(new Phone("(11)99999-9999"));
-$student->addPhone(new Phone("(11)9999-9999"));
+$student = new Student($argv[1]);
+for($i = 2; $i < $argc; $i++){
+    $student->addPhone(new Phone($argv[$i]));
+}
+
 $entityManager->persist($student);
 $entityManager->flush();

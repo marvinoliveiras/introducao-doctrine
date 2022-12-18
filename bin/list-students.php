@@ -7,11 +7,30 @@ use App\Doctrine\Helper\EntityManagerCreator;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$entityManager = EntityManagerCreator::createEntityManager();
-$studentRepository = $entityManager->getRepository(Student::class);
-$students = $studentRepository->findAll();
+/*$entityManager = EntityManagerCreator::createEntityManager();
+$dql = 'SELECT student, phone, course FROM App\\Doctrine\\Entity\\Student student
+    LEFT JOIN student.phones phone
+    LEFT JOIN student.courses course';
+*/
+/**
+ * @var $student[] $studentList
+ */
+/*$studentList = $entityManager->createQuery($dql)
+    ->getResult();
 
-foreach($students as $student){
+
+$studentList = $entityManager->getRepository(
+    Student::class
+    )->findAll();
+*/
+
+$entityManager = EntityManagerCreator::createEntityManager();
+$studentRepository = $entityManager->getRepository(
+    Student::class
+);
+$studentList = $studentRepository
+    ->getStudentsAndCourses();
+foreach($studentList as $student){
     echo PHP_EOL.PHP_EOL;
     echo "ID: $student->id\nName: $student->name\n";
     echo "Phones:\n";
@@ -25,6 +44,9 @@ foreach($students as $student){
         ->toArray());
     echo PHP_EOL.PHP_EOL;
 }
-
+$studentClass = Student::class;
+$dql = "SELECT COUNT(student) FROM $studentClass student";
+echo "list: " . $entityManager->createQuery($dql)
+    ->getSingleScalarResult();
 //$student = $studentRepository->findOneBy(['name' => 'Marcos Vinícius']);
 

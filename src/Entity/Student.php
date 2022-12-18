@@ -2,6 +2,7 @@
 namespace App\Doctrine\Entity;
 
 use App\Doctrine\Entity\Course;
+use App\Doctrine\Repository\DoctrineStudentRepository;
 use Doctrine\Common\Collections\{
     ArrayCollection,Collection
 };
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping\{
     OneToMany
 };
 
-#[Entity]
+#[Entity(repositoryClass: DoctrineStudentRepository::class)]
 class Student{
     #[Column]
     #[Id]
@@ -20,7 +21,8 @@ class Student{
     public int $id;
     #[OneToMany(targetEntity:
         Phone::class, mappedBy: "student",
-        cascade:["persist", "remove"]
+        cascade:["persist", "remove"],
+        fetch: 'EAGER'
     )]
     public Collection $phones;
 
